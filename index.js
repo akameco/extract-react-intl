@@ -20,17 +20,24 @@ const concatArray = (obj, src) => {
   return undefined
 }
 
-const getBabelrc = cwd => {
+const getBabelOptions = cwd => {
   try {
-    const babelrc = readBabelrcUp.sync({ cwd }).babel
+    const { path, babel: babelrcOptions } = readBabelrcUp.sync({ cwd })
 
-    if (!babelrc.env) {
-      return babelrc
+    // Provide config extending another absolute path config to prevent path
+    // resolution errors. Plugins and errors may contain relative paths,
+    // but they are resolved against transformed files.
+    const babelOptions = {
+      extends: path
+    }
+
+    if (!babelrcOptions.env) {
+      return babelOptions
     }
 
     const env = process.env.BABEL_ENV || process.env.NODE_ENV || 'development'
 
-    return mergeWith(babelrc, babelrc.env[env], concatArray)
+    return mergeWith(babelOptions, babelrcOptions.env[env], concatArray)
   } catch (err) {
     return { presets: [], plugins: [] }
   }
@@ -53,27 +60,26 @@ module.exports = (locales, pattern, opts) => {
     opts
   )
 
-  const babelrc = getBabelrc(opts.cwd) || {}
+  const babelOptions = getBabelOptions(opts.cwd) || {}
 
-  const { presets = [], plugins = [] } = babelrc
-
-  // eslint-disable-next-line global-require
-  plugins.push(require('babel-plugin-react-intl').default)
+  babelOptions.plugins = (babelOptions.plugins || []).concat(
+    // eslint-disable-next-line global-require
+    require('babel-plugin-react-intl').default
+  )
 
   const extractFromFile = file => {
-    return pify(transformFile)(file, {
-      presets,
-      plugins
-    }).then(({ metadata: result }) => {
-      const localeObj = localeMap(locales)
-      for (const { id, defaultMessage } of result['react-intl'].messages) {
-        for (const locale of locales) {
-          localeObj[locale][id] =
-            opts.defaultLocale === locale ? defaultMessage : ''
+    return pify(transformFile)(file, babelOptions).then(
+      ({ metadata: result }) => {
+        const localeObj = localeMap(locales)
+        for (const { id, defaultMessage } of result['react-intl'].messages) {
+          for (const locale of locales) {
+            localeObj[locale][id] =
+              opts.defaultLocale === locale ? defaultMessage : ''
+          }
         }
+        return localeObj
       }
-      return localeObj
-    })
+    )
   }
 
   return pify(glob)(pattern)
