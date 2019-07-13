@@ -70,6 +70,20 @@ Type: `string`<br> Example: `./path/to/module` <br> Default: `react-intl`
 
 The ES6 module source name of the React Intl package. Defines from where _defineMessages_, `<FormattedMessage />` and `<FormattedHTMLMessage />` are imported.
 
+#### extractFromFormatMessageCall
+
+Type: `boolean`<br> Example: `--extractFromFormatMessageCall` <br> Default: `react-intl`
+
+If the value is `true`, Extractor will extract the i18n message and ID from `intl.formatMessage` calls as well.
+i:e
+
+```
+intl.formatMessage({
+                id: 'Supported.file.types',
+                defaultMessage: 'Supported file types',
+            })
+```
+
 ##### cwd
 
 Type: `string`<br> Default: `.`

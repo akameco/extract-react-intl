@@ -62,14 +62,18 @@ module.exports = async (locales, pattern, opts) => {
   const babelrc = getBabelrc(opts.cwd) || {}
   const babelrcDir = getBabelrcDir(opts.cwd)
 
-  const { moduleSourceName } = opts
+  const { moduleSourceName, extractFromFormatMessageCall } = opts
   const pluginOptions = moduleSourceName ? { moduleSourceName } : {}
-
   const { presets = [], plugins = [] } = babelrc
 
   // eslint-disable-next-line global-require
   presets.unshift({
-    plugins: [[require('babel-plugin-react-intl').default, pluginOptions]]
+    plugins: [
+      [
+        require('babel-plugin-react-intl').default,
+        { ...pluginOptions, extractFromFormatMessageCall }
+      ]
+    ]
   })
 
   const extractFromFile = async file => {
