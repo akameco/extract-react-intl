@@ -78,10 +78,13 @@ module.exports = async (locales, pattern, opts) => {
       plugins: resolvePlugins(plugins, babelrcDir)
     })
     const localeObj = localeMap(locales)
-    for (const { id, defaultMessage } of result['react-intl'].messages) {
+    for (const { id, defaultMessage, description } of result['react-intl']
+      .messages) {
       for (const locale of locales) {
-        localeObj[locale][id] =
-          opts.defaultLocale === locale ? defaultMessage : ''
+        const message = opts.defaultLocale === locale ? defaultMessage : ''
+        localeObj[locale][id] = opts.descriptions
+          ? { message, description }
+          : message
       }
     }
     return localeObj
