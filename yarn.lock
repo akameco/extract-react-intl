@@ -1045,7 +1045,7 @@ babel-plugin-react-intl-auto@^1.6.0:
     "@babel/types" "^7.0.0"
     murmurhash3js "^3.0.1"
 
-babel-plugin-react-intl@^3.0.1:
+babel-plugin-react-intl@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-intl/-/babel-plugin-react-intl-3.0.1.tgz#4abc7fff04a7bbbb7034aec0a675713f2e52181c"
   integrity sha512-FqnEO+Tq7kJVUPKsSG3s5jaHi3pAC4RUR11IrscvjsfkOApLP2DtzNo6dtQ+tX+OzEzJx7cUms8aCw5BFyW5xg==
