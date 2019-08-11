@@ -1,3 +1,5 @@
+# This repo was migrated to the [extract-react-intl-messages](https://github.com/akameco/extract-react-intl-messages)
+
 # extract-react-intl
 
 [![Build Status](https://travis-ci.org/akameco/extract-react-intl.svg?branch=master)](https://travis-ci.org/akameco/extract-react-intl)
